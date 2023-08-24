@@ -1,5 +1,6 @@
 'use client'
 //module imports
+import React,{useEffect} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from 'next/navigation';
@@ -7,9 +8,21 @@ import { SignOutButton, SignedIn } from "@clerk/nextjs";
 
 //custom imports
 import { sidebarLinks } from "@/constants";
+import { useGlobalContext } from "@/app/context/context";
+
 function LeftSideBar() {
     const router = useRouter();
     const pathname = usePathname();
+    const {setLoading} = useGlobalContext();
+
+    const handleLinkClick = () => {
+        setLoading(true);
+    };
+
+    useEffect(() => {
+        console.log("changed");
+        setLoading(false);
+      }, [pathname]);
 
     return (
         <section className="custom-scrollbar leftsidebar">
@@ -21,6 +34,7 @@ function LeftSideBar() {
                             href={link.route}
                             key={link.label}
                             className={`leftsidebar_link ${isActive && 'bg-primary-500'}`}
+                            onClick={handleLinkClick}
                         >
                             <Image src={link.imgURL}
                                 alt={link.label}

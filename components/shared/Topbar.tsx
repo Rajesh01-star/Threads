@@ -1,12 +1,18 @@
+'use client'
 import Link from "next/link"
 import Image from "next/image"
 import { OrganizationSwitcher, SignedIn, SignOutButton } from "@clerk/nextjs"
-import {dark} from '@clerk/themes'
+import { dark } from '@clerk/themes'
+import Loading from "./Loading"
+import { useGlobalContext } from "@/app/context/context"
 
 
 function Topbar() {
+    const { loading } = useGlobalContext();
+
     return (
         <nav className="topbar">
+            {loading && <Loading />}
             <Link href="/" className="flex items-center gap-4">
                 <Image src='/assets/logo.svg' alt="logo" width={28} height={28} />
                 <p className="text-heading3-bold text-light-1 max-xs:hidden">Threads</p>

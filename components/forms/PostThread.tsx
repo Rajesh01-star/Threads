@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button"
 // import { updateUser } from "@/lib/actions/user.actions";
 import { CreateThread } from "@/lib/actions/thread.actions";
 import { ThreadValidation } from "@/lib/validations/thread";
+import { useGlobalContext } from "@/app/context/context";
 
 
 
@@ -37,6 +38,7 @@ interface Props {
 function PostThread({ userId }: { userId: string }) {
     const router = useRouter();
     const pathname = usePathname();
+    const {loading, setLoading} = useGlobalContext();
 
     const form = useForm({
         resolver: zodResolver(ThreadValidation),
@@ -47,13 +49,14 @@ function PostThread({ userId }: { userId: string }) {
     });
 
     const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
+        setLoading(true);
         await CreateThread({
             text: values.thread,
             author: userId,
             communityId: null,
             path: pathname
         });
-
+        setLoading(false);
         router.push('/');
     }
     return (
