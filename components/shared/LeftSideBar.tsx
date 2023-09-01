@@ -4,13 +4,14 @@ import React,{useEffect} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from 'next/navigation';
-import { SignOutButton, SignedIn } from "@clerk/nextjs";
+import { SignOutButton, SignedIn,useAuth } from "@clerk/nextjs";
 
 //custom imports
 import { sidebarLinks } from "@/constants";
 import { useGlobalContext } from "@/app/context/context";
 
 function LeftSideBar() {
+    const {userId} = useAuth();
     const router = useRouter();
     const pathname = usePathname();
     const {setLoading} = useGlobalContext();
@@ -29,6 +30,8 @@ function LeftSideBar() {
             <div className="flex w-full flex-1 flex-col gap-6 px-6">
                 {sidebarLinks.map((link) => {
                     const isActive = (pathname.includes(link.route) && link.route.length > 1 || pathname === link.route)
+
+                    if(link.route === '/profile') link.route = `${link.route}/${userId}`
                     return (
                         <Link
                             href={link.route}
